@@ -16,9 +16,13 @@ function App() {
 
   const newGame = () => {
     setTiles(startLayout);
+    setNumTurns(1);
+    setNumTreesPlaced(0);
+    setNumTreesRemoved(0);
   }
 
   const endTurn = () => {
+    spreadFire();
     setNumTurns(numTurns + 1);
     setNumTreesPlaced(0);
     setNumTreesRemoved(0);
@@ -64,6 +68,10 @@ function App() {
 
   const isTree = (r, c) => {
     return !isOutOfBound(r, c) && tiles[r][c] === 'T';
+  }
+
+  const isFire = (r,c) => {
+    return !isOutOfBound(r, c) && tiles[r][c] === 'F';
   }
 
   const hasTreeNorth = (r, c) => {
@@ -183,6 +191,44 @@ function App() {
     setTiles(newTiles);
   }
 
+  const setFireRandom = () => {
+    let newTiles = tiles.map((row) => (row.slice()));
+    for (let r = 0; r < newTiles.length; r++) {
+      for (let c = 0; c < newTiles[r].length; c++) {
+        if (isTree(r, c)) {
+          if (Math.random() < fireChance) {
+            newTiles[r][c] = 'F';
+          }
+        }
+      }
+    }
+    setTiles(newTiles);
+  }
+
+  const spreadFire = () => {
+    let newTiles = tiles.map((row) => (row.slice()));
+    // Spread fire
+    for (let r = 0; r < newTiles.length; r++) {
+      for (let c = 0; c < newTiles[r].length; c++) {
+        if (isFire(r, c)) {
+          if (hasTreeNorth(r, c)) newTiles[r-1][c] = 'F';
+          if (hasTreeSouth(r, c)) newTiles[r+1][c] = 'F';
+          if (hasTreeWest(r, c)) newTiles[r][c-1] = 'F';
+          if (hasTreeEast(r, c)) newTiles[r][c+1] = 'F';
+        }
+      }
+    }
+    // Burnt trees become sand again
+    for (let r = 0; r < newTiles.length; r++) {
+      for (let c = 0; c < newTiles[r].length; c++) {
+        if (isFire(r, c)) {
+          newTiles[r][c] = 'S';
+        }
+      }
+    }
+    setTiles(newTiles);
+  }
+
   return (
     <div className="App">
       <h1>Root War</h1>
@@ -199,6 +245,7 @@ function App() {
             newGameFn={newGame} 
             sandstormFn={sandstorm} 
             spawnFn={spawnRandomTrees} 
+            setFireFn={setFireRandom}
             endTurnFn={endTurn}/>
         </div>
         <div className="col-xl-1"></div>
