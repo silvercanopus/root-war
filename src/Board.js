@@ -7,7 +7,7 @@ const Board = (props) => {
                 <div className="Row" key={`Row-${i}`}>
                     {row.map((value, j) => (
                         <div className="Tile" key={`Tile-${i*row.length+j}`}>
-                            <button className={`TileButton Value-${value}`} onClick={() => changeTile(i, j)}>
+                            <button className={`TileButton Tile-${value}`} onClick={() => changeTile(i, j)}>
                                 {value}
                             </button>
                         </div>

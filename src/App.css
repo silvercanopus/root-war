@@ -23,14 +23,14 @@ body {
   width: 4em;
 }
 
-.Value-0 {
+.Tile-R {
   background-color: rgb(0, 0, 0);  
 }
 
-.Value-1 {
+.Tile-S {
   background-color: rgb(133,103,28);  
 }
 
-.Value-2 {
+.Tile-T {
   background-color: rgb(48,183,0);  
 }

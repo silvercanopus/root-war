@@ -7,11 +7,12 @@ import Sidebar from './Sidebar'
 function App() {
   let [tiles, setTiles] = useState(startLayout);
   let [numTurns, setNumTurns] = useState(1);
-  const spawnChance = 0.1;
   let [numTreesPlaced, setNumTreesPlaced] = useState(0);
   const maxTreesPlacedPerTurn = 1;
   let [numTreesRemoved, setNumTreesRemoved] = useState(0);
   const maxTreesRemovedPerTurn = 1;
+  const spawnChance = 0.1;
+  const fireChance = 0.05;
 
   const newGame = () => {
     setTiles(startLayout);
@@ -26,12 +27,12 @@ function App() {
   const changeTile = (r, c) => {
     // Function to handle tile change
     let newTiles = tiles.map((row) => (row.slice()));
-    if (newTiles[r][c] === '1' && numTreesPlaced < maxTreesPlacedPerTurn) {
-      newTiles[r][c] = '2';
+    if (newTiles[r][c] === 'S' && numTreesPlaced < maxTreesPlacedPerTurn) {
+      newTiles[r][c] = 'T';
       setNumTreesPlaced(numTreesPlaced + 1);
     }
-    else if (newTiles[r][c] === '2' && numTreesRemoved < maxTreesRemovedPerTurn) {
-      newTiles[r][c] = '1';
+    else if (newTiles[r][c] === 'T' && numTreesRemoved < maxTreesRemovedPerTurn) {
+      newTiles[r][c] = 'S';
       setNumTreesRemoved(numTreesRemoved + 1);
     }
     setTiles(newTiles);
@@ -54,15 +55,15 @@ function App() {
   }
 
   const isRock = (r, c) => {
-    return !isOutOfBound(r, c) && tiles[r][c] === '0';
+    return !isOutOfBound(r, c) && tiles[r][c] === 'R';
   }
 
   const isSand = (r, c) => {
-    return !isOutOfBound(r, c) && tiles[r][c] === '1';
+    return !isOutOfBound(r, c) && tiles[r][c] === 'S';
   }
 
   const isTree = (r, c) => {
-    return !isOutOfBound(r, c) && tiles[r][c] === '2';
+    return !isOutOfBound(r, c) && tiles[r][c] === 'T';
   }
 
   const hasTreeNorth = (r, c) => {
@@ -116,7 +117,7 @@ function App() {
           }
 
           if (!isRock(r - 1, c)) {
-            newTiles[r][c] = '1';
+            newTiles[r][c] = 'S';
           }
           
           if (hasTreeWest(r, c) && isStableHorizontally(r, c - 1)) {
@@ -153,10 +154,10 @@ function App() {
             if (isSand(r + 1, c + 1)) options.push('d');
             if (options.length > 0) {
               const randomOption = options[Math.floor(Math.random() * options.length)];
-              if (randomOption === 'a') newTiles[r-1][c] = '2';
-              else if (randomOption === 'b') newTiles[r-1][c+1] = '2';
-              else if (randomOption === 'c') newTiles[r+1][c] = '2';
-              else if (randomOption === 'd') newTiles[r+1][c+1] = '2';
+              if (randomOption === 'a') newTiles[r-1][c] = 'T';
+              else if (randomOption === 'b') newTiles[r-1][c+1] = 'T';
+              else if (randomOption === 'c') newTiles[r+1][c] = 'T';
+              else if (randomOption === 'd') newTiles[r+1][c+1] = 'T';
             }
           }
         }
@@ -170,10 +171,10 @@ function App() {
             if (isSand(r + 1, c + 1)) options.push('d');
             if (options.length > 0) {
               const randomOption = options[Math.floor(Math.random() * options.length)];
-              if (randomOption === 'a') newTiles[r][c-1] = '2';
-              else if (randomOption === 'b') newTiles[r+1][c-1] = '2';
-              else if (randomOption === 'c') newTiles[r][c+1] = '2';
-              else if (randomOption === 'd') newTiles[r+1][c+1] = '2';
+              if (randomOption === 'a') newTiles[r][c-1] = 'T';
+              else if (randomOption === 'b') newTiles[r+1][c-1] = 'T';
+              else if (randomOption === 'c') newTiles[r][c+1] = 'T';
+              else if (randomOption === 'd') newTiles[r+1][c+1] = 'T';
             }
           }
         }
