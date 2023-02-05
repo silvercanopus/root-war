@@ -5,8 +5,23 @@ const Sidebar = (props) => {
         <div className="Sidebar">
             write instruction here maybe
             <div className="mt-2">
-                <button className="btn btn-light" onClick={() => {sandstormFn()}}>
-                    Sandstorm
+                <button className="btn btn-light" onClick={() => {sandstormFn("N")}}>
+                    N Sandstorm
+                </button>
+            </div>
+            <div className="mt-2">
+                <button className="btn btn-light" onClick={() => {sandstormFn("E")}}>
+                    E Sandstorm
+                </button>
+            </div>
+            <div className="mt-2">
+                <button className="btn btn-light" onClick={() => {sandstormFn("S")}}>
+                    S Sandstorm
+                </button>
+            </div>
+            <div className="mt-2">
+                <button className="btn btn-light" onClick={() => {sandstormFn("W")}}>
+                    W Sandstorm
                 </button>
             </div>
             <div className="mt-2">
