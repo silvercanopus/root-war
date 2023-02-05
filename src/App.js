@@ -6,6 +6,7 @@ import Sidebar from './Sidebar'
 
 function App() {
   let [tiles, setTiles] = useState(startLayout);
+  const spawnChance = 0.1;
 
   const newGame = () => {
     setTiles(startLayout);
@@ -92,12 +93,10 @@ function App() {
     }
 
     let newTiles = tiles.map((row) => (row.slice()));
-    const lastRow = tiles.length - 1;
-    const lastCol = tiles[0].length - 1;
 
     // Assume sandstorm is coming from the north
-    for (let c = 0; c <= lastCol; c++) {
-      for (let r = 0; r <= lastRow; r++) {
+    for (let c = 0; c < tiles[0].length; c++) {
+      for (let r = 0; r < tiles.length; r++) {
         if (isTree(r, c)) {
           if (isStableHorizontally(r, c)) {
             break;
@@ -127,6 +126,49 @@ function App() {
     setTiles(newTiles);
   }
 
+  const spawnRandomTrees = () => {
+    let newTiles = tiles.map((row) => (row.slice()));
+    for (let r = 0; r < tiles.length; r++) {
+      for (let c = 0; c < tiles[r].length; c++) {
+        if (isTree(r, c) && hasTreeEast(r, c)) {
+          if (Math.random() < spawnChance) {
+            // try spawning a tree on an adjacent tile
+            const options = [];
+            if (isSand(r - 1, c)) options.push('a');
+            if (isSand(r - 1, c + 1)) options.push('b');
+            if (isSand(r + 1, c)) options.push('c');
+            if (isSand(r + 1, c + 1)) options.push('d');
+            if (options.length > 0) {
+              const randomOption = options[Math.floor(Math.random() * options.length)];
+              if (randomOption === 'a') newTiles[r-1][c] = '2';
+              else if (randomOption === 'b') newTiles[r-1][c+1] = '2';
+              else if (randomOption === 'c') newTiles[r+1][c] = '2';
+              else if (randomOption === 'd') newTiles[r+1][c+1] = '2';
+            }
+          }
+        }
+        if (isTree(r, c) && hasTreeSouth(r, c)) {
+          if (Math.random() < spawnChance) {
+            // try spawning a tree on an adjacent tile
+            const options = [];
+            if (isSand(r, c - 1)) options.push('a');
+            if (isSand(r + 1, c - 1)) options.push('b');
+            if (isSand(r, c + 1)) options.push('c');
+            if (isSand(r + 1, c + 1)) options.push('d');
+            if (options.length > 0) {
+              const randomOption = options[Math.floor(Math.random() * options.length)];
+              if (randomOption === 'a') newTiles[r][c-1] = '2';
+              else if (randomOption === 'b') newTiles[r+1][c-1] = '2';
+              else if (randomOption === 'c') newTiles[r][c+1] = '2';
+              else if (randomOption === 'd') newTiles[r+1][c+1] = '2';
+            }
+          }
+        }
+      }
+    }
+    setTiles(newTiles);
+  }
+
   return (
     <div className="App">
       <h1>Root War</h1>
@@ -136,7 +178,7 @@ function App() {
           <Board layout={tiles} changeTile={changeTile}/>
         </div>
         <div className="col-xl-4 col-md-4">
-          <Sidebar newGameFn={newGame} sandstormFn={sandstorm} />
+          <Sidebar newGameFn={newGame} sandstormFn={sandstorm} spawnFn={spawnRandomTrees}/>
         </div>
         <div className="col-xl-1"></div>
       </div>

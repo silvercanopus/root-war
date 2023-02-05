@@ -1,5 +1,5 @@
 const Sidebar = (props) => {
-    const { newGameFn, sandstormFn } = props;
+    const { newGameFn, sandstormFn, spawnFn } = props;
 
     return (
         <div className="Sidebar">
@@ -22,6 +22,11 @@ const Sidebar = (props) => {
             <div className="mt-2">
                 <button className="btn btn-light" onClick={() => {sandstormFn("W")}}>
                     W Sandstorm
+                </button>
+            </div>
+            <div className="mt-2">
+                <button className="btn btn-light" onClick={() => {spawnFn()}}>
+                    Spawn Random Trees
                 </button>
             </div>
             <div className="mt-2">
