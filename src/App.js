@@ -11,19 +11,16 @@ function App() {
   const maxTreesPlacedPerTurn = 1;
   let [numTreesRemoved, setNumTreesRemoved] = useState(0);
   const maxTreesRemovedPerTurn = 1;
+  let [numTurnsUntilSandstorm, setNumTurnsUntilSandstorm] = useState(4);
+  const minTurnsUntilSandstorm = 3;
+  const maxTurnsUntilSandstorm = 5;
+  let [nextSandstormDirection, setNextSandstormDirection] = useState('E');
   const spawnChance = 0.1;
   const fireChance = 0.05;
 
   const newGame = () => {
     setTiles(startLayout);
     setNumTurns(1);
-    setNumTreesPlaced(0);
-    setNumTreesRemoved(0);
-  }
-
-  const endTurn = () => {
-    spreadFire();
-    setNumTurns(numTurns + 1);
     setNumTreesPlaced(0);
     setNumTreesRemoved(0);
   }
@@ -52,6 +49,10 @@ function App() {
       newTiles.push(newRow);
     }
     return newTiles;
+  }
+
+  const randomInt = (lo, hi) => {
+    return lo + Math.floor(Math.random() * (hi - lo + 1));
   }
 
   const isOutOfBound = (r, c) => {
@@ -229,6 +230,24 @@ function App() {
     setTiles(newTiles);
   }
 
+  const endTurn = () => {
+    setNumTurns(numTurns + 1);
+    setNumTreesPlaced(0);
+    setNumTreesRemoved(0);
+    spreadFire();
+    console.log(nextSandstormDirection);
+    if (numTurnsUntilSandstorm === 1) {
+      // Apply sandstorm and spawn a new one
+      sandstorm(nextSandstormDirection);
+      const options = ['N', 'E', 'S', 'W'];
+      setNextSandstormDirection(options[Math.floor(Math.random() * options.length)]);
+      setNumTurnsUntilSandstorm(randomInt(minTurnsUntilSandstorm, maxTurnsUntilSandstorm));
+    }
+    else {
+      setNumTurnsUntilSandstorm(numTurnsUntilSandstorm - 1);
+    }
+  }
+
   return (
     <div className="App">
       <h1>Root War</h1>
@@ -243,6 +262,8 @@ function App() {
             numPlacement={maxTreesPlacedPerTurn - numTreesPlaced}
             numRemoval={maxTreesRemovedPerTurn - numTreesRemoved}
             newGameFn={newGame} 
+            sandstormCountdown={numTurnsUntilSandstorm}
+            sandstormDirection={nextSandstormDirection}
             sandstormFn={sandstorm} 
             spawnFn={spawnRandomTrees} 
             setFireFn={setFireRandom}

@@ -1,5 +1,7 @@
 const Sidebar = (props) => {
-    const { numTurns, numPlacement, numRemoval, newGameFn, sandstormFn, spawnFn, setFireFn, endTurnFn } = props;
+    const { numTurns, numPlacement, numRemoval, newGameFn, sandstormCountdown, sandstormDirection, sandstormFn, spawnFn, setFireFn, endTurnFn } = props;
+
+    const directionName = {'N': 'north', 'E': 'east', 'S': 'south', 'W': 'west'};
 
     return (
         <div className="Sidebar">
@@ -14,9 +16,20 @@ const Sidebar = (props) => {
                 Number of removal remaining: {numRemoval}
             </div>
             <div className="mt-2">
+                Incoming sandstorm from {directionName[sandstormDirection]} in {sandstormCountdown} turns!
+            </div>
+            <div className="mt-2">
                 <button className="btn btn-light" onClick={() => {endTurnFn()}}>
                     End Turn
                 </button>
+            </div>
+            <div className="mt-2">
+                <button className="btn btn-light" onClick={() => {newGameFn()}}>
+                    New Game
+                </button>
+            </div>
+            <div className="mt-2">
+            === TO BE REMOVED ===
             </div>
             <div className="mt-2">
                 <button className="btn btn-light" onClick={() => {sandstormFn("N")}}>
@@ -46,11 +59,6 @@ const Sidebar = (props) => {
             <div className="mt-2">
                 <button className="btn btn-light" onClick={() => {setFireFn()}}>
                     Set Random Trees On Fire (5% chance per tree)
-                </button>
-            </div>
-            <div className="mt-2">
-                <button className="btn btn-light" onClick={() => {newGameFn()}}>
-                    New Game
                 </button>
             </div>
         </div>
