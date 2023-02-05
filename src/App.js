@@ -17,7 +17,7 @@ function App() {
   let [nextSandstormDirection, setNextSandstormDirection] = useState('E');
   const spawnChance = 0.1;
   const fireChance = 0.01;
-  const fireSpreadChance = 0.5;
+  const fireSpreadChance = 0.25;
 
   const newGame = () => {
     setTiles(startLayout);
