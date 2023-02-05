@@ -24,7 +24,6 @@ function App() {
   }
 
   const rotateTilesClockwise = (tiles) => {
-    console.log(tiles);
     let newTiles = [];
     for (let c = 0; c < tiles[0].length; c++) {
       let newRow = [];
@@ -33,7 +32,6 @@ function App() {
       }
       newTiles.push(newRow);
     }
-    console.log(newTiles);
     return newTiles;
   }
 
@@ -109,10 +107,10 @@ function App() {
             newTiles[r][c] = '1';
           }
           
-          if (hasTreeWest(r, c) && isStableHorizontally(r - 1, c)) {
+          if (hasTreeWest(r, c) && isStableHorizontally(r, c - 1)) {
             break;
           }
-          else if (hasTreeEast(r, c) && isStableHorizontally(r + 1, c)) {
+          else if (hasTreeEast(r, c) && isStableHorizontally(r, c + 1)) {
             break;
           }
         }
