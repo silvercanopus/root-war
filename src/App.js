@@ -23,6 +23,8 @@ function App() {
     setNumTurns(1);
     setNumTreesPlaced(0);
     setNumTreesRemoved(0);
+    setNumTurnsUntilSandstorm(4);
+    setNextSandstormDirection('E');
   }
 
   const changeTile = (r, c) => {
@@ -146,7 +148,7 @@ function App() {
       }
     }
 
-    setTiles(newTiles);
+    return newTiles;
   }
 
   const spawnRandomTrees = () => {
@@ -189,7 +191,7 @@ function App() {
         }
       }
     }
-    setTiles(newTiles);
+    return newTiles;
   }
 
   const setFireRandom = () => {
@@ -203,7 +205,7 @@ function App() {
         }
       }
     }
-    setTiles(newTiles);
+    return newTiles;
   }
 
   const spreadFire = () => {
@@ -227,18 +229,18 @@ function App() {
         }
       }
     }
-    setTiles(newTiles);
+    return newTiles;
   }
 
-  const endTurn = () => {
+  const endTurn = async () => {
     setNumTurns(numTurns + 1);
     setNumTreesPlaced(0);
     setNumTreesRemoved(0);
-    spreadFire();
-    console.log(nextSandstormDirection);
+
+    // Update tiles
+    const originalTiles = tiles.map((row) => (row.slice()));
     if (numTurnsUntilSandstorm === 1) {
-      // Apply sandstorm and spawn a new one
-      sandstorm(nextSandstormDirection);
+      tiles = sandstorm(nextSandstormDirection);
       const options = ['N', 'E', 'S', 'W'];
       setNextSandstormDirection(options[Math.floor(Math.random() * options.length)]);
       setNumTurnsUntilSandstorm(randomInt(minTurnsUntilSandstorm, maxTurnsUntilSandstorm));
@@ -246,6 +248,11 @@ function App() {
     else {
       setNumTurnsUntilSandstorm(numTurnsUntilSandstorm - 1);
     }
+    tiles = spreadFire();
+    tiles = spawnRandomTrees();
+    const newTiles = tiles;
+    tiles = originalTiles;
+    setTiles(newTiles);
   }
 
   return (
