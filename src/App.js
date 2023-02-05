@@ -6,20 +6,33 @@ import Sidebar from './Sidebar'
 
 function App() {
   let [tiles, setTiles] = useState(startLayout);
+  let [numTurns, setNumTurns] = useState(1);
   const spawnChance = 0.1;
+  let [numTreesPlaced, setNumTreesPlaced] = useState(0);
+  const maxTreesPlacedPerTurn = 1;
+  let [numTreesRemoved, setNumTreesRemoved] = useState(0);
+  const maxTreesRemovedPerTurn = 1;
 
   const newGame = () => {
     setTiles(startLayout);
   }
 
-  const changeTile = (row, col, newValue) => {
+  const endTurn = () => {
+    setNumTurns(numTurns + 1);
+    setNumTreesPlaced(0);
+    setNumTreesRemoved(0);
+  }
+
+  const changeTile = (r, c) => {
     // Function to handle tile change
     let newTiles = tiles.map((row) => (row.slice()));
-    if (newTiles[row][col] == '1') {
-      newTiles[row][col] = '2';
-    } 
-    else if (newTiles[row][col] == '2') {
-      newTiles[row][col] = '1';
+    if (newTiles[r][c] === '1' && numTreesPlaced < maxTreesPlacedPerTurn) {
+      newTiles[r][c] = '2';
+      setNumTreesPlaced(numTreesPlaced + 1);
+    }
+    else if (newTiles[r][c] === '2' && numTreesRemoved < maxTreesRemovedPerTurn) {
+      newTiles[r][c] = '1';
+      setNumTreesRemoved(numTreesRemoved + 1);
     }
     setTiles(newTiles);
   }
@@ -178,7 +191,14 @@ function App() {
           <Board layout={tiles} changeTile={changeTile}/>
         </div>
         <div className="col-xl-4 col-md-4">
-          <Sidebar newGameFn={newGame} sandstormFn={sandstorm} spawnFn={spawnRandomTrees}/>
+          <Sidebar 
+            numTurns={numTurns}
+            numPlacement={maxTreesPlacedPerTurn - numTreesPlaced}
+            numRemoval={maxTreesRemovedPerTurn - numTreesRemoved}
+            newGameFn={newGame} 
+            sandstormFn={sandstorm} 
+            spawnFn={spawnRandomTrees} 
+            endTurnFn={endTurn}/>
         </div>
         <div className="col-xl-1"></div>
       </div>
