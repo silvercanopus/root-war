@@ -17,6 +17,7 @@ function App() {
   let [nextSandstormDirection, setNextSandstormDirection] = useState('E');
   const spawnChance = 0.1;
   const fireChance = 0.05;
+  const fireSpreadChance = 0.5;
 
   const newGame = () => {
     setTiles(startLayout);
@@ -73,8 +74,12 @@ function App() {
     return !isOutOfBound(r, c) && tiles[r][c] === 'T';
   }
 
-  const isFire = (r,c) => {
-    return !isOutOfBound(r, c) && tiles[r][c] === 'F';
+  const isFire1 = (r,c) => {
+    return !isOutOfBound(r, c) && tiles[r][c] === 'F1';
+  }
+
+  const isFire2 = (r,c) => {
+    return !isOutOfBound(r, c) && tiles[r][c] === 'F2';
   }
 
   const hasTreeNorth = (r, c) => {
@@ -200,7 +205,7 @@ function App() {
       for (let c = 0; c < newTiles[r].length; c++) {
         if (isTree(r, c)) {
           if (Math.random() < fireChance) {
-            newTiles[r][c] = 'F';
+            newTiles[r][c] = 'F1';
           }
         }
       }
@@ -213,18 +218,22 @@ function App() {
     // Spread fire
     for (let r = 0; r < newTiles.length; r++) {
       for (let c = 0; c < newTiles[r].length; c++) {
-        if (isFire(r, c)) {
-          if (hasTreeNorth(r, c)) newTiles[r-1][c] = 'F';
-          if (hasTreeSouth(r, c)) newTiles[r+1][c] = 'F';
-          if (hasTreeWest(r, c)) newTiles[r][c-1] = 'F';
-          if (hasTreeEast(r, c)) newTiles[r][c+1] = 'F';
+        if (isFire2(r, c)) {
+          if (hasTreeNorth(r, c) && Math.random() < fireSpreadChance) newTiles[r-1][c] = 'F1';
+          if (hasTreeSouth(r, c) && Math.random() < fireSpreadChance) newTiles[r+1][c] = 'F1';
+          if (hasTreeWest(r, c) && Math.random() < fireSpreadChance) newTiles[r][c-1] = 'F1';
+          if (hasTreeEast(r, c) && Math.random() < fireSpreadChance) newTiles[r][c+1] = 'F1';
         }
       }
     }
-    // Burnt trees become sand again
     for (let r = 0; r < newTiles.length; r++) {
       for (let c = 0; c < newTiles[r].length; c++) {
-        if (isFire(r, c)) {
+        if (isFire1(r, c)) {
+          // fire grows bigger
+          newTiles[r][c] = 'F2';
+        }
+        else if (isFire2(r, c)) {
+          // tree is completely burnt down
           newTiles[r][c] = 'S';
         }
       }
@@ -249,6 +258,7 @@ function App() {
       setNumTurnsUntilSandstorm(numTurnsUntilSandstorm - 1);
     }
     tiles = spreadFire();
+    tiles = setFireRandom();
     tiles = spawnRandomTrees();
     const newTiles = tiles;
     tiles = originalTiles;
