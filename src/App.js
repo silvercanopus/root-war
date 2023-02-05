@@ -10,13 +10,13 @@ function App() {
   let [numTreesPlaced, setNumTreesPlaced] = useState(0);
   const maxTreesPlacedPerTurn = 1;
   let [numTreesRemoved, setNumTreesRemoved] = useState(0);
-  const maxTreesRemovedPerTurn = 1;
+  const maxTreesRemovedPerTurn = 2;
   let [numTurnsUntilSandstorm, setNumTurnsUntilSandstorm] = useState(4);
   const minTurnsUntilSandstorm = 3;
   const maxTurnsUntilSandstorm = 5;
   let [nextSandstormDirection, setNextSandstormDirection] = useState('E');
   const spawnChance = 0.1;
-  const fireChance = 0.05;
+  const fireChance = 0.025;
   const fireSpreadChance = 0.5;
 
   const newGame = () => {
@@ -241,7 +241,23 @@ function App() {
     return newTiles;
   }
 
+  const checkWinState = () => {
+    let noSandTiles = true;
+    for (let r = 0; r < tiles.length; r++) {
+      for (let c = 0; c < tiles[r].length; c++) {
+        if (isSand(r, c)) {
+          noSandTiles = false;
+        }
+      }
+    }
+    if (noSandTiles) {
+      alert("You Win!");
+    }
+  }
+
   const endTurn = async () => {
+    checkWinState();
+
     setNumTurns(numTurns + 1);
     setNumTreesPlaced(0);
     setNumTreesRemoved(0);
