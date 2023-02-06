@@ -9,10 +9,10 @@ const Sidebar = (props) => {
                 How to play the game: <br />
                 Click on a sand tile to plant a tree. <br />
                 Click on a tree tile to remove the tree. <br />
-                Rocky tiles are not interactable. <br />
-                Adjacent trees have a chance of creating a new tree. <br />
                 There are limits to the number of trees you can plant and remove every turn. <br />
-                Sandstorms will wipe out your trees. You can minimize the damage by planting trees in a row. <br />
+                Adjacent trees have a chance of creating a new tree. <br />
+                Sandstorms will wipe out your trees. A row of 3 or more trees will partially block the sandstorm. <br />
+                Rocky tiles will protect the tree immediately behind it. <br />
                 Occasionally, some of your trees will catch fire. Fire has a random chance of spreading to neighboring trees. <br />
                 Your goal is to cover all of the sand tiles with trees.
             </div>
