@@ -1,3 +1,3 @@
 # Hold the Soil
 
-A submission to Global Game Jam 2023.
+A submission for Global Game Jam 2023.
