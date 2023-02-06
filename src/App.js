@@ -16,7 +16,7 @@ function App() {
   const maxTurnsUntilSandstorm = 5;
   let [nextSandstormDirection, setNextSandstormDirection] = useState('E');
   const spawnChance = 0.1;
-  const fireChance = 0.01;
+  const fireSpawnChance = 0.1;
   const fireSpreadChance = 0.25;
 
   const newGame = () => {
@@ -203,16 +203,35 @@ function App() {
     return newTiles;
   }
 
+  const getTreePercentage = () => {
+    let treeCount = 0;
+    let plantableCount = 0;
+    for (let r = 0; r < tiles.length; r++) {
+      for (let c = 0; c < tiles[r].length; c++) {
+        if (isTree(r, c)) {
+          treeCount += 1;
+        }
+        if (!isRock(r, c)) {
+          plantableCount += 1;
+        }
+      }
+    }
+    return treeCount / plantableCount;
+  }
+
   const setFireRandom = () => {
     let newTiles = tiles.map((row) => (row.slice()));
+    let options = [];
     for (let r = 0; r < newTiles.length; r++) {
       for (let c = 0; c < newTiles[r].length; c++) {
         if (isTree(r, c)) {
-          if (Math.random() < fireChance) {
-            newTiles[r][c] = 'F';
-          }
+          options.push([r, c]);
         }
       }
+    }
+    if (options.length > 0) {
+      const [r, c] = options[Math.floor(Math.random() * options.length)];
+      newTiles[r][c] = 'F';
     }
     return newTiles;
   }
@@ -281,16 +300,22 @@ function App() {
       setNumTurnsUntilSandstorm(numTurnsUntilSandstorm - 1);
     }
     tiles = spreadFire();
-    tiles = setFireRandom();
+    if (numTurns >= 5 && Math.random() < fireSpawnChance && getTreePercentage() < 0.9) tiles = setFireRandom();
     tiles = spawnRandomTrees();
     const newTiles = tiles;
     tiles = originalTiles;
     setTiles(newTiles);
   }
 
+  const handleKey = (e) => {
+    if (e.keyCode === 69) {
+      endTurn();
+    }
+  }
+
   return (
-    <div className="App">
-      <h1>Root War</h1>
+    <div className="App" onKeyDown={handleKey}>
+      <h1>Hold the Soil!</h1>
       <div className="row">
         <div className="col-xl-1"></div>
         <div className="col-xl-6 col-md-8">

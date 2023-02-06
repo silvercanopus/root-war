@@ -10,6 +10,7 @@ const Sidebar = (props) => {
                 Click on a sand tile to plant a tree. <br />
                 Click on a tree tile to remove the tree. <br />
                 Rocky tiles are not interactable. <br />
+                Adjacent trees have a chance of creating a new tree. <br />
                 There are limits to the number of trees you can plant and remove every turn. <br />
                 Sandstorms will wipe out your trees. You can minimize the damage by planting trees in a row. <br />
                 Occasionally, some of your trees will catch fire. Fire has a random chance of spreading to neighboring trees. <br />
@@ -29,7 +30,7 @@ const Sidebar = (props) => {
             </div>
             <div className="mt-2">
                 <button className="btn btn-light" onClick={() => {endTurnFn()}}>
-                    End Turn
+                    End Turn (E)
                 </button>
             </div>
             <div className="mt-2">
